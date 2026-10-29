@@ -1,0 +1,19 @@
+---
+import Icon from './Icon.astro';
+---
+
+<section class="section surface closing" data-surface="sky">
+  <div class="container closing__inner">
+    <Icon name="fork" class="closing__icon" size={72} />
+    <h2>تخصصك هو البداية</h2>
+    <p class="lead">انضم لمساحة بتتعلم فيها وتطبّق، وبتفتح لك خيارات أوسع من المسار التقليدي.</p>
+    <a class="btn" href="/signup?workshop=1" data-enroll="workshop:graduation-project">سجّل بالورشة المجانية <Icon name="arrow" /></a>
+  </div>
+</section>
+
+<style>
+  .closing__inner { display: grid; justify-items: center; gap: 1.5rem; text-align: center; }
+  .closing__inner :global(.closing__icon) { width: 4.5rem; height: 4.5rem; stroke-width: 1.6; }
+  .closing h2 { font-size: var(--fs-display); }
+  .closing .lead { margin-inline: auto; }
+</style>

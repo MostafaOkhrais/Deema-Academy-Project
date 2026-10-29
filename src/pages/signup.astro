@@ -1,0 +1,102 @@
+---
+import AppShell from '../layouts/AppShell.astro';
+import Icon from '../components/Icon.astro';
+import ProfileFields from '../components/ProfileFields.astro';
+import { tracks } from '../data/tracks';
+---
+
+<AppShell title="إنشاء حساب">
+  <h1 class="page-title">أنشئ حسابك</h1>
+  <p class="page-lead">حساب واحد لمساراتك وتسجيلاتك وشهاداتك. بياخد دقيقتين.</p>
+
+  <div class="sheet" data-signup>
+    <div class="progress" aria-hidden="true"><i id="su-bar"></i></div>
+    <p class="progress-label" id="su-step" aria-live="polite">الخطوة 1 من 2: بيانات الحساب</p>
+
+    <form id="su-form" novalidate>
+      <fieldset class="pane" data-pane="1">
+        <legend class="sr-only">بيانات الحساب</legend>
+        <div class="field">
+          <label for="su-name">الاسم الكامل</label>
+          <input id="su-name" name="full_name" type="text" autocomplete="name" required placeholder="الاسم الثلاثي أو الرباعي" />
+          <small class="error" data-error="full_name"></small>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="su-email">البريد الإلكتروني</label>
+            <input id="su-email" name="email" type="email" autocomplete="email" required dir="ltr" placeholder="name@example.com" />
+            <small class="error" data-error="email"></small>
+          </div>
+          <div class="field">
+            <label for="su-phone">رقم الجوال (واتساب)</label>
+            <input id="su-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required dir="ltr" placeholder="+970 5X XXX XXXX" />
+            <small class="error" data-error="phone"></small>
+          </div>
+        </div>
+        <div class="field">
+          <label for="su-password">كلمة المرور <em>(8 أحرف على الأقل)</em></label>
+          <input id="su-password" name="password" type="password" autocomplete="new-password" required minlength="8" dir="ltr" />
+          <small class="error" data-error="password"></small>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button" id="su-next">التالي <Icon name="arrow" /></button>
+        </div>
+      </fieldset>
+
+      <fieldset class="pane" data-pane="2" hidden>
+        <legend class="sr-only">ملفك واهتماماتك</legend>
+        <ProfileFields prefix="su" />
+
+        <div class="field">
+          <span class="label" id="su-lbl-tracks">شو بتحب تبدأ فيه؟ <em>(اختياري، تقدر تضيف لاحقاً من حسابك)</em></span>
+          <div class="choices" role="group" aria-labelledby="su-lbl-tracks">
+            <label class="choice"><input type="checkbox" name="workshop" value="graduation-project" /><span>ورشة مشروع التخرج المجانية</span></label>
+            {tracks.map((t) => (
+              <label class="choice"><input type="checkbox" name="tracks" value={t.id} /><span>{t.title}</span></label>
+            ))}
+          </div>
+        </div>
+
+        <label class="consent">
+          <input type="checkbox" name="consent" required />
+          <span>أوافق إن الأكاديمية تتواصل معي بخصوص حسابي وتسجيلاتي.</span>
+        </label>
+        <small class="error" data-error="consent"></small>
+
+        <div class="actions">
+          <button class="btn btn--ghost" type="button" id="su-back">رجوع</button>
+          <button class="btn" type="submit" id="su-submit">إنشاء الحساب <Icon name="arrow" /></button>
+        </div>
+      </fieldset>
+      <p class="form-msg" id="su-msg" role="alert"></p>
+    </form>
+
+    <div class="done" id="su-done" hidden tabindex="-1">
+      <span class="done__icon"><Icon name="check" /></span>
+      <h2>تحقق من بريدك الإلكتروني</h2>
+      <p>إذا كان البريد جديداً، أرسلنا لك رسالة فيها رابط تفعيل الحساب. وإن كان عندك حساب سابق فسجّل دخولك أو استعد كلمة المرور.</p>
+      <div class="done__links"><a class="btn" href="/login">تسجيل الدخول</a><a class="text-link" href="/reset">نسيت كلمة المرور؟</a></div>
+    </div>
+  </div>
+
+  <p class="switch">عندك حساب؟ <a class="text-link" href="/login">سجّل دخولك</a></p>
+</AppShell>
+
+<style>
+  .progress { height: 6px; border-radius: 99px; background: var(--row); overflow: hidden; }
+  .progress i { display: block; width: 50%; height: 100%; background: var(--sky); border-radius: inherit; transition: width 0.5s var(--ease-out); }
+  .progress-label { margin-block: 0.75rem 1.75rem; color: var(--fg-muted); font-size: var(--fs-small); }
+  .pane:not([hidden]) { animation: rise 0.4s var(--ease-out); }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+  .done { text-align: center; padding-block: 1.5rem; display: grid; justify-items: center; gap: 0.75rem; }
+  .done__icon { display: inline-grid; place-items: center; width: 4.5rem; height: 4.5rem; border-radius: 50%; background: var(--sky); color: var(--navy); }
+  .done :global(.done__icon .icon) { width: 2rem; height: 2rem; stroke-width: 2.6; }
+  .done h2 { font-size: var(--fs-h3); }
+  .done p { color: var(--fg-muted); max-width: 40ch; }
+  .done__links { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem 1.5rem; margin-block-start: 0.5rem; }
+  .switch { margin-block-start: 1.5rem; color: var(--fg-muted); }
+</style>
+
+<script>
+  import '../scripts/signup';
+</script>

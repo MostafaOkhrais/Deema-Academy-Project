@@ -1,0 +1,41 @@
+---
+import { statuses, majors, years } from '../data/options';
+
+interface Props {
+  /** Prefix for element ids so the fields can appear on several pages. */
+  prefix?: string;
+}
+const { prefix = 'p' } = Astro.props;
+---
+
+<div class="field-row">
+  <div class="field">
+    <label for={`${prefix}-city`}>المدينة / الدولة</label>
+    <input id={`${prefix}-city`} name="city" type="text" autocomplete="address-level2" placeholder="مثال: غزة، فلسطين" />
+  </div>
+  <div class="field">
+    <label for={`${prefix}-status`}>وضعك الحالي</label>
+    <select id={`${prefix}-status`} name="status" required>
+      <option value="">اختر…</option>
+      {statuses.map((s) => <option>{s}</option>)}
+    </select>
+    <small class="error" data-error="status"></small>
+  </div>
+</div>
+<div class="field-row">
+  <div class="field">
+    <label for={`${prefix}-major`}>التخصص الدراسي</label>
+    <select id={`${prefix}-major`} name="major" required>
+      <option value="">اختر…</option>
+      {majors.map((m) => <option>{m}</option>)}
+    </select>
+    <small class="error" data-error="major"></small>
+  </div>
+  <div class="field">
+    <label for={`${prefix}-year`}>المرحلة</label>
+    <select id={`${prefix}-year`} name="year">
+      <option value="">اختر…</option>
+      {years.map((y) => <option>{y}</option>)}
+    </select>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { stations } from '../data/content';
+import turnaround from '../assets/turnaround.webp';
+---
+
+<section class="section surface" data-surface="deep" id="story">
+  <div class="container story">
+    <figure class="story__figure">
+      <Image
+        src={turnaround}
+        alt="د. ديما من أربع زوايا: أمامية وثلاثة أرباع وجانبية وخلفية"
+        widths={[420, 538]}
+        sizes="(min-width: 920px) 34vw, 90vw"
+        loading="lazy"
+      />
+    </figure>
+
+    <div class="story__body">
+      <h2 class="story__title">بدأت من المركز <span class="hl">العشرين</span></h2>
+      <p class="story__path" aria-label="من المركز العشرين إلى العشرة الأوائل">
+        <span>السنة الأولى: المركز 20</span>
+        <Icon name="arrow" />
+        <span>التخرج: من بين العشرة الأوائل</span>
+      </p>
+
+      <ol class="stations">
+        {stations.map((s) => (
+          <li class="station">
+            <span class="station__icon"><Icon name={s.icon} /></span>
+            <div>
+              <h3>{s.label}</h3>
+              <p>{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+  .story__figure { position: sticky; inset-block-start: 110px; margin: 0; }
+  .story__figure img { width: 100%; border-radius: var(--radius-lg); border: 2px solid rgb(145 200 224 / 0.6); }
+  .story__title { font-size: var(--fs-h2); }
+  .story__path {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-block: 1.75rem 3rem;
+    font-weight: 500;
+  }
+  .story__path span { padding: 0.5rem 1.4rem; border-radius: 999px; background: var(--row); }
+  .story__path :global(.icon) { color: var(--accent-ink); }
+
+  .stations { display: grid; }
+  .station { position: relative; display: flex; gap: 1.5rem; padding-block-end: 2.25rem; }
+  .station:not(:last-child)::before {
+    content: ""; position: absolute; inset-inline-start: calc(1.75rem - 1px); inset-block: 3.75rem 0.5rem;
+    border-inline-start: 2px dashed var(--line);
+  }
+  .station__icon {
+    display: grid; place-items: center; flex: none; width: 3.5rem; height: 3.5rem;
+    border: 2px solid var(--accent-ink); border-radius: 50%; color: var(--accent-ink);
+  }
+  .station h3 { font-size: 1.6rem; margin-block-end: 0.25rem; }
+  .station p { color: var(--fg-muted); max-width: 52ch; }
+
+  @media (max-width: 920px) {
+    .story { grid-template-columns: 1fr; }
+    .story__figure { position: static; max-width: 420px; }
+  }
+</style>

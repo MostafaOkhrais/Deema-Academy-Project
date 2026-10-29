@@ -1,0 +1,52 @@
+---
+import { Image } from 'astro:assets';
+import { formats } from '../data/content';
+import tablet from '../assets/pose-tablet.webp';
+import point from '../assets/pose-point.webp';
+import mug from '../assets/pose-mug.webp';
+import laptop from '../assets/pose-laptop.webp';
+
+const images = { tablet, point, mug, laptop } as const;
+const alts: Record<string, string> = {
+  tablet: 'د. ديما تتصفح جهازاً لوحياً',
+  point: 'د. ديما ترفع إصبعها لتشرح فكرة',
+  mug: 'د. ديما تمسك كوباً وتبتسم',
+  laptop: 'د. ديما تعمل على حاسوب محمول',
+};
+---
+
+<section class="section surface" data-surface="sky" id="formats">
+  <div class="container">
+    <header class="head">
+      <h2 class="section-title">أربع طرق للتعلّم</h2>
+      <p class="lead">اختر اللي بيناسب وقتك وأسلوبك، أو جرّبهم كلهم.</p>
+    </header>
+
+    <ul class="formats">
+      {formats.map((f) => (
+        <li class="format">
+          <Image src={images[f.image]} alt={alts[f.image]} widths={[240, 470]} sizes="(min-width: 920px) 22vw, 44vw" loading="lazy" />
+          <h3>{f.title}</h3>
+          <p>{f.text}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .head { display: grid; gap: 1.25rem; margin-block-end: clamp(32px, 5vw, 56px); }
+  .formats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 2.5vw, 32px); }
+  .format img {
+    width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: top;
+    border-radius: var(--radius); border: 3px solid var(--white);
+    transition: transform 0.6s var(--ease-out);
+  }
+  .format { overflow: clip; }
+  .format:hover img { transform: translateY(-6px); }
+  .format h3 { margin-block: 1.25rem 0.4rem; font-size: 1.5rem; }
+  .format p { color: var(--fg-muted); line-height: 1.75; }
+
+  @media (max-width: 920px) { .formats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 420px) { .format h3 { font-size: 1.25rem; } .format p { font-size: 0.95rem; } }
+</style>

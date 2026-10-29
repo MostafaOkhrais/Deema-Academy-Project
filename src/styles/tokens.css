@@ -1,0 +1,129 @@
+/*
+  Design tokens. Brand palette comes from the Deema Academy identity board.
+  Light theme uses white and light blue only (navy appears as text colour);
+  the dark theme keeps the navy surfaces. Components read semantic tokens only.
+*/
+:root {
+  /* brand */
+  --navy: #002147;
+  --sky: #91c8e0;
+  --white: #ffffff;
+  --wash: #e8f3f9;       /* light blue wash: rows, fields, tinted surfaces */
+  --wash-strong: #dcecf5;
+
+  /* semantic: light theme, white graph paper */
+  --bg: var(--white);
+  --fg: var(--navy);
+  --fg-muted: #45607b;
+  --grid: rgb(145 200 224 / 0.38);
+  --row: var(--wash);
+  --row-hover: var(--wash-strong);
+  --line: rgb(0 33 71 / 0.16);
+  --tag-bg: var(--sky);
+  --tag-fg: var(--navy);
+  --action-bg: var(--sky);
+  --action-fg: var(--navy);
+  --action-hover: #a7d5ea;
+  --field-bg: var(--wash);
+  --field-border: #667d96;      /* 3:1+ against white and the wash, so a field is visible as a control */
+  --solid: var(--white);        /* opaque chip on top of photos */
+  --accent-ink: var(--navy);    /* icons and accents drawn in ink */
+  --hl-fg: var(--navy);         /* highlighted word colour */
+  --hl-h: 0.34em;               /* highlighter bar height */
+  --logo-filter: none;
+  --danger: #b3261e;
+  --ok: #0b6b3f;
+
+  /* type */
+  --font-display: "Thmanyah Serif Display", "Noto Naskh Arabic", serif;
+  --font-body: "Thmanyah Sans", system-ui, "Segoe UI", Tahoma, sans-serif;
+  --fs-display: clamp(3rem, 8.4vw, 6rem);
+  --fs-h2: clamp(2.25rem, 5.4vw, 4rem);
+  --fs-h3: clamp(1.5rem, 2.6vw, 2rem);
+  --fs-lead: clamp(1.15rem, 1.7vw, 1.4rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --lh-display: 1.28;
+  --lh-body: 1.9;
+
+  /* space and shape */
+  --container: 1200px;
+  --gutter: clamp(20px, 4vw, 48px);
+  --section-y: clamp(72px, 10vw, 136px);
+  --radius-sm: 16px;
+  --radius: 28px;
+  --radius-lg: 36px;
+  --cell: 36px;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 280ms;
+}
+
+/*
+  Surfaces re-point the semantic tokens; sections just declare data-surface.
+  "deep" is the emphasis surface: light blue in the light theme, navy in dark.
+*/
+[data-surface="deep"] {
+  --bg: #e4f1f8;
+  --grid: rgb(145 200 224 / 0.6);
+  --row: var(--white);
+  --row-hover: #f3f9fc;
+  --field-bg: var(--white);
+  --fg-muted: #34566f;
+}
+
+[data-surface="sky"] {
+  --bg: var(--sky);
+  --fg: var(--navy);
+  --fg-muted: #1d3f66;
+  --grid: rgb(255 255 255 / 0.28);
+  --row: rgb(255 255 255 / 0.6);
+  --row-hover: rgb(255 255 255 / 0.8);
+  --line: rgb(0 33 71 / 0.25);
+  --action-bg: var(--white);
+  --action-fg: var(--navy);
+  --action-hover: #f0f8fc;
+  --tag-bg: var(--white);
+  --tag-fg: var(--navy);
+  --accent-ink: var(--navy);
+  --hl-fg: var(--navy);
+  --hl-h: 0.34em;
+  --field-border: #4f6b87;
+  --logo-filter: none;
+  --danger: #b3261e;
+  --ok: #0b6b3f;
+}
+
+/* Dark theme: white paper becomes deep navy paper. */
+:root[data-theme="dark"] {
+  --bg: #001a38;
+  --fg: #f2f2f2;
+  --fg-muted: #a9c0d3;
+  --grid: rgb(145 200 224 / 0.1);
+  --row: #00264f;
+  --row-hover: #003062;
+  --line: rgb(255 255 255 / 0.2);
+  --field-bg: #00264f;
+  --field-border: #6d9db7;
+  --solid: #00122a;
+  --accent-ink: var(--sky);
+  --hl-fg: var(--sky);
+  --hl-h: 0.09em;
+  --logo-filter: brightness(0) invert(1);
+  --danger: #ff9d8f;
+  --ok: #8be5bc;
+  color-scheme: dark;
+}
+:root[data-theme="dark"] [data-surface="deep"] {
+  --bg: #00122a;
+  --grid: rgb(145 200 224 / 0.13);
+  --row: rgb(255 255 255 / 0.07);
+  --row-hover: rgb(255 255 255 / 0.12);
+  --field-bg: rgb(255 255 255 / 0.08);
+  --fg-muted: #bcd3e3;
+}
+:root[data-theme="dark"] [data-surface="sky"] {
+  --field-bg: rgb(255 255 255 / 0.55);
+  --solid: var(--white);
+}

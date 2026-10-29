@@ -1,0 +1,43 @@
+---
+import { beliefs } from '../data/content';
+---
+
+<section class="section surface" data-surface="paper" id="about">
+  <div class="container intro">
+    <div class="intro__copy">
+      <span class="tag">أهلاً فيكم</span>
+      <h2 class="intro__title">أهلاً في أكاديمية ديما</h2>
+      <p class="lead">أنا ديما، دكتورة صيدلانية. هاي مساحة عربية لطلاب وخريجي التخصصات الصحية.</p>
+      <p class="intro__body">
+        نجمع بين العلوم الصحية والذكاء الاصطناعي والبحث العلمي وصناعة المحتوى الطبي، عشان نوسّع خياراتك
+        ونبني معك هوية مهنية أكبر من المسار التقليدي، بعلم رصين وأسلوب قريب وواضح.
+      </p>
+    </div>
+
+    <ol class="intro__list" aria-label="ما نؤمن به">
+      {beliefs.map((b, i) => (
+        <li class="row belief">
+          <span class="num">{i + 1}</span>
+          <span class="belief__text">
+            <strong>{b.title}</strong>
+            <span>{b.text}</span>
+          </span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .intro { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+  .intro__title { margin-block: 1.25rem 1.25rem; font-size: var(--fs-h2); }
+  .intro__body { margin-block-start: 1.25rem; max-width: 56ch; color: var(--fg-muted); }
+  .intro__list { display: grid; gap: 0.9rem; }
+  .belief { align-items: flex-start; padding-block: 1.25rem; transition: background-color var(--dur); }
+  .belief:hover { background: var(--row-hover); }
+  .belief .num { margin-block-start: 0.25rem; }
+  .belief__text { display: grid; gap: 0.1rem; }
+  .belief__text strong { font-weight: 900; }
+  .belief__text span { font-family: var(--font-body); font-weight: 400; font-size: 1.0625rem; color: var(--fg-muted); line-height: 1.7; }
+  @media (max-width: 920px) { .intro { grid-template-columns: 1fr; } }
+</style>

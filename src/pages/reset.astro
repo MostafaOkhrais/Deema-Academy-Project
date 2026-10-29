@@ -1,0 +1,48 @@
+---
+import AppShell from '../layouts/AppShell.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<AppShell title="استعادة كلمة المرور">
+  <h1 class="page-title">استعادة كلمة المرور</h1>
+
+  <div data-reset>
+    <!-- Step 1: ask for the email -->
+    <form class="sheet" id="rs-request" novalidate>
+      <p class="page-lead">اكتب بريدك وبنرسل لك رابطاً لتعيين كلمة مرور جديدة.</p>
+      <div class="field">
+        <label for="rs-email">البريد الإلكتروني</label>
+        <input id="rs-email" name="email" type="email" autocomplete="email" required dir="ltr" placeholder="name@example.com" />
+        <small class="error" data-error="email"></small>
+      </div>
+      <p class="form-msg" id="rs-msg" role="alert"></p>
+      <div class="actions">
+        <button class="btn" type="submit" id="rs-send">أرسل الرابط <Icon name="send" /></button>
+      </div>
+    </form>
+
+    <!-- Step 2: shown when the visitor arrives from the email link -->
+    <form class="sheet" id="rs-new" novalidate hidden>
+      <p class="page-lead">اختر كلمة مرور جديدة لحسابك.</p>
+      <div class="field">
+        <label for="rs-password">كلمة المرور الجديدة <em>(8 أحرف على الأقل)</em></label>
+        <input id="rs-password" name="password" type="password" autocomplete="new-password" required dir="ltr" />
+        <small class="error" data-error="password"></small>
+      </div>
+      <p class="form-msg" id="rs-msg2" role="alert"></p>
+      <div class="actions">
+        <button class="btn" type="submit" id="rs-save">حفظ كلمة المرور <Icon name="arrow" /></button>
+      </div>
+    </form>
+  </div>
+
+  <p class="switch"><a class="text-link" href="/login">العودة لتسجيل الدخول</a></p>
+</AppShell>
+
+<style>
+  .switch { margin-block-start: 1.5rem; }
+</style>
+
+<script>
+  import '../scripts/reset';
+</script>

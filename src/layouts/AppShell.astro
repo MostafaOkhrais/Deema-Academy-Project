@@ -1,0 +1,40 @@
+---
+import Base from './Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { accountsEnabled } from '../lib/supabase';
+
+interface Props {
+  title: string;
+  /** "narrow" centres a single form; "wide" gives dashboards the full container. */
+  width?: 'narrow' | 'wide';
+}
+
+const { title, width = 'narrow' } = Astro.props;
+---
+
+<Base title={`${title} — أكاديمية ديما`} noindex>
+  <Header />
+  <main id="main" class="app surface" data-surface="paper">
+    <div class="container app__inner" data-width={width}>
+      {accountsEnabled ? (
+        <slot />
+      ) : (
+        <section class="notice" role="status">
+          <h1>نظام الحسابات قيد الإعداد</h1>
+          <p>سيكون التسجيل وتسجيل الدخول متاحَين قريباً. تابع صفحتنا ليصلك الإعلان.</p>
+          <a class="btn" href="/">العودة للرئيسية</a>
+        </section>
+      )}
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .app { padding-block: clamp(40px, 6vw, 88px); min-height: 70svh; }
+  .app__inner[data-width="narrow"] { max-width: 640px; }
+  .notice { display: grid; justify-items: start; gap: 1rem; padding-block: 3rem; }
+  .notice h1 { font-size: var(--fs-h2); }
+  .notice p { color: var(--fg-muted); max-width: 46ch; }
+</style>

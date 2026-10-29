@@ -1,0 +1,125 @@
+---
+import Icon from './Icon.astro';
+import { faq } from '../data/content';
+import { accountsEnabled } from '../lib/supabase';
+---
+
+<section class="section surface" data-surface="paper" id="faq">
+  <div class="container faq">
+    <header class="faq__head">
+      <h2 class="section-title">عندك سؤال؟</h2>
+      <label class="faq__search">
+        <span class="sr-only">ابحث في الأسئلة</span>
+        <input id="faq-search" type="search" placeholder="ابحث في الأسئلة" autocomplete="off" />
+      </label>
+    </header>
+
+    <div class="faq__list" id="faq-list">
+      {faq.map((item) => (
+        <details class="faq__item" name="faq">
+          <summary class="row">
+            <span>{item.q}</span>
+            <Icon name="plus" class="faq__plus" />
+          </summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+    <p class="faq__empty" id="faq-empty" role="status" hidden>ما لقينا نتيجة. جرّب كلمة ثانية أو ابعتلنا سؤالك تحت.</p>
+
+    {accountsEnabled && (
+    <form class="ask" id="ask-form" novalidate>
+      <div>
+        <h3>ما لقيت جوابك؟</h3>
+        <p>ابعت سؤالك، والاستفسار مفتوح للكل بدون تسجيل.</p>
+      </div>
+      <div class="ask__fields">
+        <label class="sr-only" for="ask-q">سؤالك</label>
+        <textarea id="ask-q" name="q" rows="2" required maxlength="1000" placeholder="اكتب سؤالك هنا…"></textarea>
+        <label class="sr-only" for="ask-c">وسيلة التواصل</label>
+        <input id="ask-c" name="contact" type="text" dir="ltr" maxlength="120" placeholder="بريدك أو رقم واتساب (اختياري)" />
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button class="btn" type="submit">أرسل سؤالك <Icon name="send" /></button>
+        <p class="ask__msg" id="ask-msg" role="status"></p>
+      </div>
+    </form>
+    )}
+  </div>
+</section>
+
+<style>
+  .faq { display: grid; gap: 1.75rem; max-width: 900px; }
+  .faq__head { display: grid; gap: 1.5rem; }
+  .faq__search input {
+    width: 100%; min-height: 3.5rem; padding: 0 1.5rem; border: 2px solid var(--field-border); border-radius: 999px;
+    background: var(--field-bg); transition: border-color var(--dur), background-color var(--dur);
+  }
+  .faq__search input:focus { outline: none; border-color: var(--accent-ink); background: var(--bg); box-shadow: 0 0 0 3px var(--sky); }
+
+  .faq__list { display: grid; gap: 0.8rem; }
+  .faq__item summary { cursor: pointer; list-style: none; justify-content: space-between; transition: background-color var(--dur); }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__item summary:hover { background: var(--row-hover); }
+  .faq__item :global(.faq__plus) { transition: transform var(--dur) var(--ease-out); }
+  .faq__item[open] :global(.faq__plus) { transform: rotate(45deg); }
+  .faq__item[open] summary { background: var(--sky); color: var(--navy); }
+  .faq__item p { padding: 1rem 1.75rem 0.5rem; color: var(--fg-muted); max-width: 62ch; }
+  .faq__empty { color: var(--fg-muted); }
+
+  .ask { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 1.5rem 2.5rem; margin-block-start: 2.5rem; padding: clamp(22px, 4vw, 40px); border-radius: var(--radius-lg); background: var(--sky); color: var(--navy); }
+  .ask h3 { font-size: var(--fs-h3); }
+  .ask p { margin-block-start: 0.4rem; color: #1d3f66; }
+  .ask__fields { display: grid; gap: 0.75rem; }
+  .ask textarea, .ask input {
+    width: 100%; padding: 0.8rem 1.25rem; border: 2px solid var(--field-border); border-radius: 20px; background: rgb(255 255 255 / 0.7); color: var(--navy); line-height: 1.6;
+  }
+  .ask textarea { min-height: 4.5rem; resize: vertical; }
+  .ask input { min-height: 3.25rem; }
+  .ask textarea:focus, .ask input:focus { outline: none; border-color: var(--navy); background: #fff; box-shadow: none; }
+  .ask .btn { justify-self: start; }
+  .ask__msg { min-height: 1.5em; font-weight: 700; color: var(--navy); }
+  .ask :focus-visible { outline-color: var(--navy); }
+  /* honeypot: invisible to people, tempting to bots */
+  .hp { position: absolute; inset-inline-start: -9999px; width: 1px; height: 1px; opacity: 0; }
+  @media (max-width: 760px) { .ask { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  import { $, $$ } from '../lib/dom';
+  import { arabicError, submitQuestion } from '../lib/accounts';
+
+  // search: hide items that do not match; open the first match
+  const input = $<HTMLInputElement>('#faq-search')!;
+  const items = $$<HTMLDetailsElement>('.faq__item');
+  const empty = $('#faq-empty')!;
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    let first = true;
+    items.forEach((item) => {
+      const match = !q || (item.textContent ?? '').toLowerCase().includes(q);
+      item.hidden = !match;
+      if (q && match && first) { item.open = true; first = false; } else if (!q) item.open = false;
+    });
+    empty.hidden = items.some((i) => !i.hidden);
+  });
+
+  // ask a question: stored in the admin inbox (public insert, admin-only read)
+  const form = $<HTMLFormElement>('#ask-form');
+  if (form) {
+    const msg = $('#ask-msg')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const field = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value.trim();
+      const question = field('q');
+      if (question.length < 6) { msg.textContent = 'اكتب سؤالك بجملة كاملة من فضلك.'; return; }
+      if (field('website')) { msg.textContent = 'وصل سؤالك، شكراً إلك.'; form.reset(); return; } // honeypot filled: bot
+      try {
+        await submitQuestion(question, field('contact'));
+        msg.textContent = 'وصل سؤالك، شكراً إلك. رح نرد عليك قريباً.';
+        form.reset();
+      } catch (err) {
+        msg.textContent = arabicError(err as Error);
+      }
+    });
+  }
+</script>

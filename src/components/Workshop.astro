@@ -1,0 +1,34 @@
+---
+import Icon from './Icon.astro';
+---
+
+<section class="section surface" data-surface="paper" id="workshop">
+  <div class="container workshop">
+    <span class="tag">ورشة تفاعلية مجانية</span>
+    <h2 class="workshop__title">مشروع التخرج مش لازم يكون رحلة عشوائية!</h2>
+    <p class="lead">كيف تبدأ وتكمل بخطة واضحة وتخرج بمشروع تفخر فيه؟</p>
+
+    <a class="btn" href="/signup?workshop=1" data-enroll="workshop:graduation-project">التسجيل مفتوح الآن <Icon name="arrow" /></a>
+
+    <ul class="workshop__topics" aria-label="محاور الورشة">
+      <li>اختيار الموضوع</li>
+      <li>تقسيم المشروع لمراحل</li>
+      <li>البحث عن المراجع</li>
+    </ul>
+
+    <p class="workshop__where"><Icon name="monitor" /> أونلاين عبر Google Meet <span aria-hidden="true">|</span> الموعد قريباً</p>
+  </div>
+</section>
+
+<style>
+  .workshop { display: grid; justify-items: center; gap: 1.5rem; text-align: center; }
+  .workshop__title { font-size: var(--fs-h2); max-width: 18ch; }
+  .workshop .lead { margin-inline: auto; }
+  .workshop__topics { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-block-start: 0.5rem; }
+  .workshop__topics li {
+    padding: 0.55rem 1.5rem; border-radius: 999px; background: var(--row);
+    font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;
+  }
+  .workshop__where { display: inline-flex; align-items: center; gap: 0.6rem; margin-block-start: 1rem; color: var(--fg-muted); font-weight: 500; }
+  .workshop__where span { opacity: 0.5; }
+</style>

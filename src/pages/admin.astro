@@ -1,0 +1,77 @@
+---
+import AppShell from '../layouts/AppShell.astro';
+---
+
+<AppShell title="لوحة الإدارة" width="wide">
+  <p class="loading" id="ad-loading" role="status">جاري التحميل…</p>
+
+  <section class="denied" id="ad-denied" hidden>
+    <h1 class="page-title">هذه الصفحة للإدارة فقط</h1>
+    <p class="page-lead">حسابك ما عنده صلاحية الإدارة.</p>
+    <a class="btn" href="/account">العودة لحسابي</a>
+  </section>
+
+  <div data-admin hidden>
+    <h1 class="page-title">لوحة الإدارة</h1>
+    <p class="page-lead" id="ad-summary" role="status"></p>
+
+    <div class="tabbar" role="tablist" aria-label="أقسام الإدارة">
+      <button class="tabbtn" type="button" role="tab" id="tab-req" aria-selected="true" aria-controls="ad-requests">الطلبات</button>
+      <button class="tabbtn" type="button" role="tab" id="tab-mem" aria-selected="false" aria-controls="ad-members">المشتركون</button>
+      <button class="tabbtn" type="button" role="tab" id="tab-q" aria-selected="false" aria-controls="ad-questions">الأسئلة</button>
+    </div>
+
+    <p class="form-msg" id="ad-msg" role="alert"></p>
+
+    <section id="ad-requests" role="tabpanel" aria-labelledby="tab-req">
+      <div class="tools">
+        <label class="sr-only" for="ad-q">بحث</label>
+        <input id="ad-q" type="search" placeholder="ابحث بالاسم أو البريد أو رقم الطلب" />
+        <label class="sr-only" for="ad-status">الحالة</label>
+        <select id="ad-status">
+          <option value="">كل الحالات</option>
+          <option value="pending">قيد المراجعة</option>
+          <option value="approved">مقبول</option>
+          <option value="completed">مكتمل</option>
+          <option value="rejected">غير مقبول</option>
+        </select>
+      </div>
+      <ul class="entries" id="ad-req-list"></ul>
+      <p class="empty" id="ad-req-empty" hidden>لا توجد طلبات مطابقة.</p>
+    </section>
+
+    <section id="ad-members" role="tabpanel" aria-labelledby="tab-mem" hidden>
+      <div class="tools">
+        <label class="sr-only" for="ad-mq">بحث</label>
+        <input id="ad-mq" type="search" placeholder="ابحث بالاسم أو البريد" />
+      </div>
+      <ul class="entries" id="ad-mem-list"></ul>
+      <p class="empty" id="ad-mem-empty" hidden>لا يوجد مشتركون مطابقون.</p>
+    </section>
+
+    <section id="ad-questions" role="tabpanel" aria-labelledby="tab-q" hidden>
+      <ul class="entries" id="ad-q-list"></ul>
+      <p class="empty" id="ad-q-empty" hidden>لا توجد أسئلة.</p>
+    </section>
+  </div>
+</AppShell>
+
+<style>
+  .loading { color: var(--fg-muted); padding-block: 2rem; }
+  .denied { display: grid; justify-items: start; gap: 0.5rem; }
+  .tabbar { display: flex; gap: 0.6rem; margin-block-end: 1.5rem; }
+  .tabbtn {
+    min-height: 2.75rem; padding: 0 1.5rem; border: 0; border-radius: 999px; background: var(--row); color: var(--fg);
+    font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
+    transition: background-color var(--dur);
+  }
+  .tabbtn:hover { background: var(--row-hover); }
+  .tabbtn[aria-selected="true"] { background: var(--sky); color: var(--navy); box-shadow: inset 0 0 0 2px var(--navy); }
+  .tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-block-end: 1.25rem; }
+  .tools input { flex: 1 1 260px; border-radius: 999px; }
+  .tools select { flex: 0 0 auto; width: auto; border-radius: 999px; }
+</style>
+
+<script>
+  import '../scripts/admin';
+</script>

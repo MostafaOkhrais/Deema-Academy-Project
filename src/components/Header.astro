@@ -1,0 +1,112 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { nav } from '../data/site';
+---
+
+<header class="header">
+  <div class="container header__bar">
+    <Logo width={150} />
+
+    <nav class="header__nav" id="site-nav" aria-label="التنقل الرئيسي">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      <a class="btn btn--small header__nav-cta" href="/signup" data-auth-cta>إنشاء حساب</a>
+    </nav>
+
+    <div class="header__tools">
+      <button class="icon-btn" type="button" id="theme-toggle" aria-label="تبديل الوضع الليلي">
+        <Icon name="moon" class="i-moon" />
+        <Icon name="sun" class="i-sun" />
+      </button>
+      <a class="header__login" href="/login" data-auth-login>دخول</a>
+      <a class="btn btn--small header__cta" href="/signup" data-auth-cta>إنشاء حساب</a>
+      <button class="icon-btn header__burger" type="button" id="menu-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="القائمة">
+        <Icon name="menu" class="i-open" />
+        <Icon name="x" class="i-close" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky; inset-block-start: 0; z-index: 50;
+    background: var(--bg); border-block-end: 2px solid var(--sky);
+  }
+  .header__bar { display: flex; align-items: center; gap: 1.5rem; min-height: 76px; }
+  .header__nav { display: flex; align-items: center; gap: 0.25rem; margin-inline-start: auto; }
+  .header__nav a:not(.btn) {
+    padding: 0.5rem 1rem; border-radius: 999px; text-decoration: none;
+    font-weight: 500; color: var(--fg-muted);
+    transition: color var(--dur), background-color var(--dur);
+  }
+  .header__nav a:not(.btn):hover { color: var(--fg); background: var(--row); }
+  .header__nav-cta { display: none; }
+  .header__login { padding: 0.5rem 0.9rem; border-radius: 999px; font-weight: 700; text-decoration: none; }
+  .header__login:hover { background: var(--row); }
+  .header__tools { display: flex; align-items: center; gap: 0.6rem; }
+
+  .icon-btn {
+    display: grid; place-items: center; width: 2.75rem; height: 2.75rem;
+    border: 2px solid var(--line); border-radius: 50%; background: transparent; color: var(--fg);
+    transition: background-color var(--dur), transform var(--dur) var(--ease-out);
+  }
+  .icon-btn:hover { background: var(--row); }
+  .icon-btn:active { transform: scale(0.94); }
+  .icon-btn :global(.i-sun) { display: none; }
+  :global(:root[data-theme="dark"]) .icon-btn :global(.i-sun) { display: block; }
+  :global(:root[data-theme="dark"]) .icon-btn :global(.i-moon) { display: none; }
+  .header__burger { display: none; }
+  .header__burger :global(.i-close) { display: none; }
+  .header__burger[aria-expanded="true"] :global(.i-open) { display: none; }
+  .header__burger[aria-expanded="true"] :global(.i-close) { display: block; }
+
+  @media (max-width: 920px) {
+    .header__burger { display: grid; }
+    .header__cta, .header__login { display: none; }
+    .header__tools { margin-inline-start: auto; }
+    .header__nav {
+      position: fixed; inset-inline: 0; inset-block-start: 78px; flex-direction: column; align-items: stretch;
+      gap: 0.25rem; padding: 1rem var(--gutter) 1.5rem; margin: 0;
+      background: var(--bg); border-block-end: 2px solid var(--sky);
+      clip-path: inset(0 0 100% 0); visibility: hidden;
+      transition: clip-path 0.4s var(--ease-out), visibility 0.4s;
+    }
+    .header__nav[data-open="true"] { clip-path: inset(0); visibility: visible; }
+    .header__nav a:not(.btn) { padding: 0.9rem 1rem; font-size: 1.2rem; }
+    .header__nav-cta { display: inline-flex; margin-block-start: 0.75rem; }
+  }
+</style>
+
+<script>
+  import { storage } from '../lib/dom';
+  import { getSession } from '../lib/accounts';
+
+  const root = document.documentElement;
+  const nav = document.getElementById('site-nav')!;
+  const burger = document.getElementById('menu-toggle')!;
+
+  document.getElementById('theme-toggle')!.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    storage.set('deema-theme', next);
+  });
+
+  const setMenu = (open: boolean) => {
+    nav.dataset.open = String(open);
+    burger.setAttribute('aria-expanded', String(open));
+  };
+  burger.addEventListener('click', () => setMenu(nav.dataset.open !== 'true'));
+  nav.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) setMenu(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+
+  // Reflect the signed-in state in the header (default markup is the signed-out one).
+  getSession().then((session) => {
+    if (!session) return;
+    document.querySelectorAll<HTMLAnchorElement>('[data-auth-cta]').forEach((a) => {
+      a.href = '/account';
+      a.textContent = 'حسابي';
+    });
+    document.querySelectorAll<HTMLElement>('[data-auth-login]').forEach((a) => a.setAttribute('hidden', ''));
+  });
+</script>

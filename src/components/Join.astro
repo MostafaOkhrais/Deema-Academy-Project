@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+import { steps } from '../data/content';
+
+const perks = ['مساراتك وتسجيلاتك في مكان واحد', 'متابعة حالة كل طلب', 'شهاداتك عند إصدارها', 'تنبيه بالورشات الجديدة'];
+---
+
+<section class="section section--flush-top surface" data-surface="paper" id="join">
+  <div class="container join">
+    <div class="join__intro">
+      <h2 class="section-title">كيف تبدأ؟</h2>
+      <ol class="join__steps">
+        {steps.map((s, i) => (
+          <li class="row"><span class="num">{i + 1}</span>{s}</li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="sheet join__account">
+      <h3>حسابك في الأكاديمية</h3>
+      <p>أنشئ حساباً واحداً لتسجّل في المسارات والورشات وتتابع كل شيء من مكان واحد.</p>
+      <ul class="join__perks">
+        {perks.map((p) => <li><Icon name="check" />{p}</li>)}
+      </ul>
+      <div class="join__actions">
+        <a class="btn" href="/signup" data-auth-cta>إنشاء حساب <Icon name="arrow" /></a>
+        <a class="link-arrow" href="/login" data-auth-login>عندي حساب</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .join { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .join__intro { display: grid; gap: 2rem; }
+  .join__steps { display: grid; gap: 0.9rem; }
+  .join__account h3 { font-size: var(--fs-h3); }
+  .join__account p { margin-block: 0.75rem 1.5rem; color: var(--fg-muted); max-width: 46ch; }
+  .join__perks { display: grid; gap: 0.5rem; margin-block-end: 2rem; }
+  .join__perks li { display: flex; align-items: center; gap: 0.7rem; font-weight: 500; }
+  .join__perks :global(.icon) { color: var(--accent-ink); }
+  .join__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; }
+  @media (max-width: 920px) { .join { grid-template-columns: 1fr; } }
+</style>

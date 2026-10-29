@@ -1,0 +1,83 @@
+---
+import AppShell from '../layouts/AppShell.astro';
+import Icon from '../components/Icon.astro';
+import ProfileFields from '../components/ProfileFields.astro';
+---
+
+<AppShell title="حسابي" width="wide">
+  <p class="loading" id="acc-loading" role="status">جاري التحميل…</p>
+
+  <div data-account hidden>
+    <header class="acc-head">
+      <div>
+        <h1 class="page-title" id="acc-hello">أهلاً</h1>
+        <p class="page-lead" id="acc-email" dir="ltr"></p>
+      </div>
+      <div class="acc-head__actions">
+        <a class="btn btn--ghost btn--small" id="acc-admin" href="/admin" hidden>لوحة الإدارة</a>
+        <button class="btn btn--ghost btn--small" id="acc-out" type="button">تسجيل الخروج</button>
+      </div>
+    </header>
+
+    <p class="form-msg" id="acc-error" role="alert"></p>
+
+    <div class="acc-grid">
+      <section class="sheet" aria-labelledby="h-profile">
+        <h2 class="sheet__title" id="h-profile">ملفي الشخصي</h2>
+        <form id="acc-profile" novalidate>
+          <div class="field">
+            <label for="ap-name">الاسم الكامل</label>
+            <input id="ap-name" name="full_name" type="text" autocomplete="name" required />
+            <small class="error" data-error="full_name"></small>
+          </div>
+          <div class="field">
+            <label for="ap-phone">رقم الجوال (واتساب)</label>
+            <input id="ap-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required dir="ltr" />
+            <small class="error" data-error="phone"></small>
+          </div>
+          <ProfileFields prefix="ap" />
+          <p class="form-msg" id="acc-profile-msg" role="status"></p>
+          <div class="actions">
+            <button class="btn" type="submit" id="acc-save">حفظ التغييرات <Icon name="check" /></button>
+          </div>
+        </form>
+      </section>
+
+      <div class="acc-col">
+        <section class="sheet" aria-labelledby="h-enr">
+          <h2 class="sheet__title" id="h-enr">مساراتي وتسجيلاتي</h2>
+          <ul class="entries" id="enr-list"></ul>
+          <p class="empty" id="enr-empty" hidden>ما سجّلت بأي مسار بعد. اختر من القائمة تحت.</p>
+          <div class="enr-add" id="enr-add">
+            <label class="sr-only" for="enr-select">إضافة مسار أو ورشة</label>
+            <select id="enr-select"></select>
+            <button class="btn btn--small" type="button" id="enr-add-btn">إضافة</button>
+          </div>
+        </section>
+
+        <section class="sheet" aria-labelledby="h-cert">
+          <h2 class="sheet__title" id="h-cert">شهاداتي</h2>
+          <ul class="entries" id="cert-list"></ul>
+          <p class="empty" id="cert-empty" hidden>لا توجد شهادات بعد. تظهر هنا عند إصدارها لك.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</AppShell>
+
+<style>
+  .loading { color: var(--fg-muted); padding-block: 2rem; }
+  .acc-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-block-end: 1rem; }
+  .acc-head .page-lead { margin-block-end: 0; }
+  .acc-head__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .acc-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(16px, 3vw, 32px); align-items: start; margin-block-start: 1.5rem; }
+  .acc-col { display: grid; gap: clamp(16px, 3vw, 32px); }
+  .enr-add { display: flex; gap: 0.6rem; margin-block-start: 1.25rem; }
+  .enr-add select { flex: 1; min-width: 0; }
+  .enr-add[hidden] { display: none; }
+  @media (max-width: 920px) { .acc-grid { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  import '../scripts/account';
+</script>

@@ -1,0 +1,124 @@
+---
+import Icon from './Icon.astro';
+import { tracks } from '../data/tracks';
+---
+
+<section class="section surface" data-surface="paper" id="tracks">
+  <div class="container">
+    <header class="head">
+      <h2 class="section-title">شو بتلاقي هون؟</h2>
+      <p class="lead">خمس مسارات تفتح لك أبواب أوسع من المسار التقليدي. اختر مساراً لتعرف شو رح تتعلم وإلى وين ممكن يوصلك.</p>
+    </header>
+
+    <div class="tracks" data-tracks>
+      <div class="tracks__list" role="tablist" aria-label="المسارات التعليمية" aria-orientation="vertical">
+        {tracks.map((t, i) => (
+          <button
+            class="row tracks__tab"
+            type="button"
+            role="tab"
+            id={`tab-${t.id}`}
+            aria-controls={`panel-${t.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            <Icon name={t.icon} />
+            <span>{t.title}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="tracks__panels">
+        {tracks.map((t, i) => (
+          <article class="panel" role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} tabindex="0" data-hidden-js={i === 0 ? null : ''}>
+            <h3>{t.title}</h3>
+            <p class="panel__summary">{t.summary}</p>
+            <div class="panel__cols">
+              <div>
+                <h4>رح تتعلم</h4>
+                <ul>{t.learn.map((x) => <li><Icon name="check" />{x}</li>)}</ul>
+              </div>
+              <div>
+                <h4>وين ممكن يوصلك</h4>
+                <ul>{t.leads.map((x) => <li><Icon name="arrow" />{x}</li>)}</ul>
+              </div>
+            </div>
+            <a class="btn" href={`/signup?track=${t.id}`} data-enroll={`track:${t.id}`}>سجّل بهذا المسار <Icon name="arrow" /></a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .head { display: grid; gap: 1.25rem; margin-block-end: clamp(32px, 5vw, 56px); }
+  .tracks { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(20px, 3vw, 40px); align-items: start; }
+  .tracks__list { display: grid; gap: 0.8rem; }
+  .tracks__tab {
+    width: 100%; border: 0; text-align: start; font-size: 1.25rem;
+    transition: background-color var(--dur), color var(--dur), transform var(--dur) var(--ease-out);
+  }
+  .tracks__tab:hover { background: var(--row-hover); }
+  .tracks__tab:active { transform: scale(0.985); }
+  .tracks__tab[aria-selected="true"] { background: var(--sky); color: var(--navy); box-shadow: inset 0 0 0 2px var(--navy); }
+
+  .panel {
+    padding: clamp(24px, 4vw, 48px); border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--sky) 24%, var(--bg));
+    border: 2px solid var(--sky);
+  }
+  .panel[data-state="in"] { animation: turn 0.65s var(--ease-out); }
+  @keyframes turn { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0); } }
+  .panel h3 { font-size: var(--fs-h3); }
+  .panel__summary { margin-block: 1rem 2rem; color: var(--fg-muted); max-width: 56ch; }
+  .panel__cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 2rem; margin-block-end: 2.25rem; }
+  .panel h4 { font-size: 1.15rem; margin-block-end: 0.75rem; }
+  .panel li { display: flex; align-items: flex-start; gap: 0.7rem; padding-block: 0.4rem; line-height: 1.7; }
+  .panel li :global(.icon) { width: 1.15rem; height: 1.15rem; margin-block-start: 0.4rem; }
+  .panel .btn { --_h: 3.25rem; }
+
+  /* Without JS every panel stays readable; JS turns the list into tabs. */
+  :global(.js) .panel[hidden] { display: none; }
+
+  @media (max-width: 920px) {
+    .tracks { grid-template-columns: 1fr; }
+    .panel__cols { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
+</style>
+
+<script>
+  import { $, $$ } from '../lib/dom';
+
+  const root = $('[data-tracks]');
+  if (root) {
+    const tabs = $$<HTMLButtonElement>('[role="tab"]', root);
+    const panels = $$('[role="tabpanel"]', root);
+    document.documentElement.classList.add('js');
+
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, i) => {
+        const on = i === index;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        if (on && focus) tab.focus();
+      });
+      panels.forEach((panel, i) => {
+        const on = i === index;
+        panel.hidden = !on;
+        panel.dataset.state = on ? 'in' : '';
+      });
+    };
+
+    panels.forEach((p, i) => { p.hidden = i !== 0; });
+    tabs.forEach((tab, i) => tab.addEventListener('click', () => select(i)));
+    root.addEventListener('keydown', (e) => {
+      const current = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+      const step: Record<string, number> = { ArrowDown: 1, ArrowUp: -1, ArrowLeft: 1, ArrowRight: -1 };
+      if (e.key in step) {
+        e.preventDefault();
+        select((current + step[e.key] + tabs.length) % tabs.length, true);
+      }
+    });
+  }
+</script>

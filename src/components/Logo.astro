@@ -1,0 +1,21 @@
+---
+import { Image } from 'astro:assets';
+import lockup from '../assets/logo-lockup.png';
+import { site } from '../data/site';
+
+interface Props {
+  /** Width in CSS pixels. */
+  width?: number;
+}
+
+const { width = 150 } = Astro.props;
+---
+
+<a class="logo" href="/" aria-label={`${site.name} — ${site.nameEn}`}>
+  <Image src={lockup} alt="" width={width} densities={[1, 2]} loading="eager" />
+</a>
+
+<style>
+  .logo { display: inline-flex; line-height: 0; }
+  .logo :global(img) { height: auto; filter: var(--logo-filter); }
+</style>

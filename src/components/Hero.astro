@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import portrait from '../assets/hero.webp';
+---
+
+<section class="hero surface" data-surface="deep" id="top">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <Icon name="bulb" class="hero__bulb" size={56} />
+      <h1 class="hero__title">فكّر <span class="hl hl--swipe">خارج</span> الصندوق</h1>
+      <p class="hero__pill">تخصصك هو البداية، مش حدود مستقبلك</p>
+      <p class="lead">
+        أكاديمية عربية لطلاب وخريجي التخصصات الصحية، تجمع بين الصيدلة والذكاء الاصطناعي والبحث العلمي وصناعة المحتوى الطبي.
+      </p>
+      <div class="hero__actions">
+        <a class="btn" href="#workshop">سجّل بالورشة المجانية <Icon name="arrow" /></a>
+        <a class="link-arrow" href="#tracks">شو بتلاقي هون؟</a>
+      </div>
+    </div>
+
+    <figure class="hero__figure">
+      <Image
+        src={portrait}
+        alt="د. ديما، دكتورة صيدلانية، تتحدث أمام الميكروفون في استوديو أزرق هادئ"
+        widths={[480, 678]}
+        sizes="(min-width: 920px) 40vw, 92vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <figcaption>د. ديما · دكتورة صيدلانية ومعلّمة صحية</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: clamp(40px, 6vw, 88px) clamp(56px, 8vw, 112px); overflow: clip; }
+  .hero__grid {
+    display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: clamp(32px, 6vw, 80px); align-items: center;
+  }
+  .hero__copy :global(.hero__bulb) { width: 3.5rem; height: 3.5rem; color: var(--accent-ink); stroke-width: 1.6; margin-block-end: 1.25rem; }
+  .hero__title { font-size: var(--fs-display); letter-spacing: -0.01em; }
+
+  .hero__pill {
+    display: inline-block; margin-block: 1.5rem 1.25rem; padding: 0.45rem 1.75rem;
+    border-radius: 999px; background: var(--sky); color: var(--navy);
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(1.15rem, 2.2vw, 1.6rem); line-height: 1.5;
+  }
+  .hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 2rem; margin-block-start: 2rem; }
+  .hero .link-arrow { color: var(--fg); }
+
+  .hero__figure { position: relative; margin: 0; justify-self: end; width: min(100%, 460px); }
+  .hero__figure img {
+    width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 34% 18%;
+    border-radius: var(--radius-lg); border: 2px solid rgb(145 200 224 / 0.6);
+  }
+  .hero__figure figcaption {
+    position: absolute; inset-inline-start: 1rem; inset-block-end: 1rem; padding: 0.45rem 1.1rem;
+    border-radius: 999px; background: var(--solid); color: var(--fg); border: 2px solid var(--sky); font-weight: 500; font-size: 0.95rem; line-height: 1.5;
+  }
+
+  @media (max-width: 920px) {
+    .hero__grid { grid-template-columns: 1fr; }
+    .hero__figure { justify-self: start; width: min(100%, 420px); }
+  }
+</style>
