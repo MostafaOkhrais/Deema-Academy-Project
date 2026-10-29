@@ -7,12 +7,6 @@ dist/
 .impeccable/review/
 .impeccable/mocks/
 
-# Licensed font files (Thmanyah): the licence forbids redistributing them, so they stay out of git.
-# Copy them into public/fonts/ locally and in your deploy (see public/fonts/README.md).
-public/fonts/*.woff2
-public/fonts/*.otf
-public/fonts/*.ttf
-
 # Old static version and local tooling config
 _v1-static/
 .mcp.json
